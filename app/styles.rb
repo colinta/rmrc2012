@@ -15,6 +15,6 @@ Teacup::Stylesheet.new :first do
     # the `title:` method doesn't exist on UIButton, it is assigned
     # using a "teacup_handler".  easier to read, at the cost of a
     # little bit of obfuscation
-    title: "Hi!"
+    title: "Goto Second"
 
 end
