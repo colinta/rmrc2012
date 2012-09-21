@@ -10,8 +10,9 @@ class FirstViewController < UIViewController
     end
   end
 
-  # use teacup to create a button and style it.
-  layout do
+  # style the root view
+  layout :root do
+    # use teacup to create a button and style it.
     button = subview(UIButton.rounded_rect, :button)
   end
 
