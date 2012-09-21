@@ -47,8 +47,14 @@ class SecondViewController < UIViewController
 
       row = @data[index_path.row]
       if @selected.include? row
+        # sugarcube uses :symbol.uiconstantgroup as an alternative to
+        # UIConstantGroupLongNameSymbolName.  So this style is the same as
+        # using UITableViewCellAccessoryCheckmark.  you only really save a
+        # few characters, but when you combine this with sweettea and teacup
+        # handlers, your stylesheet code can be very short and sweet.
         cell.accessoryType = :checkmark.uitablecellaccessory
       else
+        # UITableViewCellAccessoryNone
         cell.accessoryType = :none.uitablecellaccessory
       end
       cell.textLabel.text = row
