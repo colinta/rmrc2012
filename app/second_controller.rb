@@ -13,6 +13,7 @@ class SecondViewController < UIViewController
   def viewDidLoad
     super
     @data = %w{Lorem ipsum dolor sit amet consectetur adipiscing elit}
+    @selected = []
   end
 
   ##|
@@ -34,7 +35,8 @@ class SecondViewController < UIViewController
   end
 
   def tableView(table_view, cellForRowAtIndexPath:index_path)
-    if index_path.row == 0
+    case index_path
+    when IndexPath[0]
       cell_identifier = 'SecondViewController - lorem cell'
       cell = table_view.dequeueReusableCellWithIdentifier(cell_identifier)
 
@@ -44,6 +46,11 @@ class SecondViewController < UIViewController
       end
 
       row = @data[index_path.row]
+      if @selected.include? row
+        cell.accessoryType = :checkmark.uitablecellaccessory
+      else
+        cell.accessoryType = :none.uitablecellaccessory
+      end
       cell.textLabel.text = row
     end
 
@@ -52,5 +59,13 @@ class SecondViewController < UIViewController
 
   def tableView(table_view, didSelectRowAtIndexPath:index_path)
     table_view.deselectRowAtIndexPath(index_path, animated:true)
+
+    row = @data[index_path.row]
+    if @selected.include? row
+      @selected.delete(row)
+    else
+      @selected << row
+    end
+    table_view.reloadData
   end
 end
