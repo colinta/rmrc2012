@@ -1,4 +1,8 @@
 class FirstViewController < UIViewController
+  # we have moved the styling code from the `layout` method to the stylesheet
+  # named :first, in styles.rb.  Our Controller is slimmer, but we can still
+  # see all the UIView object instantiation.
+  stylesheet :first
 
   def init
     super.tap do
@@ -8,17 +12,7 @@ class FirstViewController < UIViewController
 
   # use teacup to create a button and style it.
   layout do
-    button = subview(UIButton.rounded_rect, :button,
-
-      # `frame` is a property on UIView,
-      # and so this assignment is the same as `button.frame = [...]`
-      frame: [[10, 10], [100, 20]],
-
-      # the `title:` method doesn't exist on UIButton, it is assigned
-      # using a "teacup_handler".  easier to read, at the cost of a
-      # little bit of obfuscation
-      title: "Hi!",
-      )
+    button = subview(UIButton.rounded_rect, :button)
   end
 
 end
