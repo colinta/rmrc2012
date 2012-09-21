@@ -10,10 +10,14 @@ class SecondViewController < UIViewController
     subview(UITableView.grouped, delegate: self, dataSource: self)
   end
 
-  def viewDidLoad
+  def viewWillAppear(animated)
     super
-    @data = %w{Lorem ipsum dolor sit amet consectetur adipiscing elit}
-    @selected = []
+    @user = User.current
+  end
+
+  def viewWillDisappear(animated)
+    super
+    User.persist
   end
 
   ##|
@@ -24,20 +28,20 @@ class SecondViewController < UIViewController
   end
 
   def tableView(table_view, titleForHeaderInSection:section)
-    "Lorem Ipsum"
+    "Favorite Languages"
   end
 
   def tableView(table_view, numberOfRowsInSection:section)
     case section
     when 0
-      @data.size
+      User::FavoriteChoices.size
     end
   end
 
   def tableView(table_view, cellForRowAtIndexPath:index_path)
     case index_path
     when IndexPath[0]
-      cell_identifier = 'SecondViewController - lorem cell'
+      cell_identifier = 'SecondViewController - favorite language'
       cell = table_view.dequeueReusableCellWithIdentifier(cell_identifier)
 
       if not cell
@@ -45,8 +49,8 @@ class SecondViewController < UIViewController
                             reuseIdentifier: cell_identifier)
       end
 
-      row = @data[index_path.row]
-      if @selected.include? row
+      lang = User::FavoriteChoices[index_path.row]
+      if @user.likes? lang
         # sugarcube uses :symbol.uiconstantgroup as an alternative to
         # UIConstantGroupLongNameSymbolName.  So this style is the same as
         # using UITableViewCellAccessoryCheckmark.  you only really save a
@@ -57,7 +61,7 @@ class SecondViewController < UIViewController
         # UITableViewCellAccessoryNone
         cell.accessoryType = :none.uitablecellaccessory
       end
-      cell.textLabel.text = row
+      cell.textLabel.text = lang
     end
 
     return cell
@@ -66,12 +70,13 @@ class SecondViewController < UIViewController
   def tableView(table_view, didSelectRowAtIndexPath:index_path)
     table_view.deselectRowAtIndexPath(index_path, animated:true)
 
-    row = @data[index_path.row]
-    if @selected.include? row
-      @selected.delete(row)
+    lang = User::FavoriteChoices[index_path.row]
+    if @user.likes? lang
+      @user.dislikes! lang
     else
-      @selected << row
+      @user.likes! lang
     end
     table_view.reloadData
   end
+
 end
